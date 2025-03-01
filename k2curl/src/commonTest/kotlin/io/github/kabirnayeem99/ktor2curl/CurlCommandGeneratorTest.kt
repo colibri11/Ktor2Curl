@@ -14,7 +14,7 @@ import io.ktor.http.HeadersBuilder
 import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import io.ktor.utils.io.core.toByteArray
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -22,7 +22,7 @@ import kotlin.test.assertTrue
 
 class GenerateCurlTests {
     @Test
-    fun `generateCurl with GET request and no headers`() = runBlocking {
+    fun `generateCurl with GET request and no headers`() = runTest {
         val request = HttpRequestBuilder().apply {
             url("https://example.com/api")
             method = HttpMethod.Get
@@ -34,7 +34,7 @@ class GenerateCurlTests {
     }
 
     @Test
-    fun `generateCurl with POST request and body`() = runBlocking {
+    fun `generateCurl with POST request and body`() = runTest {
         val request = HttpRequestBuilder().apply {
             url("https://example.com/api")
             method = HttpMethod.Post
@@ -47,7 +47,7 @@ class GenerateCurlTests {
     }
 
     @Test
-    fun `generateCurl with headers and excluded headers`() = runBlocking {
+    fun `generateCurl with headers and excluded headers`() = runTest {
         val request = HttpRequestBuilder().apply {
             url("https://example.com/api")
             method = HttpMethod.Get
@@ -62,6 +62,7 @@ class GenerateCurlTests {
         val result =
             generateCurl(request, excludedHeaders = excludedHeaders)
 
+        @Suppress("MaxLineLength")
         assertEquals(
             "curl -X GET -H \"User-Agent: KtorClient\" -H \"Content-Type: application/json\" \"https://example.com/api\"",
             result
@@ -69,7 +70,7 @@ class GenerateCurlTests {
     }
 
     @Test
-    fun `generateCurl with no Content-Type and onNoContentTypeHeader triggered`() = runBlocking {
+    fun `generateCurl with no Content-Type and onNoContentTypeHeader triggered`() = runTest {
         val request = HttpRequestBuilder().apply {
             url("https://example.com/api")
             method = HttpMethod.Post
@@ -83,7 +84,7 @@ class GenerateCurlTests {
     }
 
     @Test
-    fun `generateCurl with Content-Type in body`() = runBlocking {
+    fun `generateCurl with Content-Type in body`() = runTest {
         val request = HttpRequestBuilder().apply {
             url("https://example.com/api")
             method = HttpMethod.Post
@@ -92,7 +93,7 @@ class GenerateCurlTests {
         }
 
         val result = generateCurl(request, excludedHeaders = emptySet())
-
+        @Suppress("MaxLineLength")
         assertEquals(
             "curl -X POST -H \"Content-Type: application/json\" \"https://example.com/api\" -d '{ \"key\": \"value\" }'",
             result
@@ -100,7 +101,7 @@ class GenerateCurlTests {
     }
 
     @Test
-    fun `generateCurl with multiple headers and excluded one`() = runBlocking {
+    fun `generateCurl with multiple headers and excluded one`() = runTest {
         val request = HttpRequestBuilder().apply {
             url("https://example.com/api")
             method = HttpMethod.Post
@@ -114,7 +115,7 @@ class GenerateCurlTests {
 
         val excludedHeaders = setOf("Authorization")
         val result = generateCurl(request, excludedHeaders = excludedHeaders)
-
+        @Suppress("MaxLineLength")
         assertEquals(
             "curl -X POST -H \"Content-Type: application/json\" -H \"User-Agent: KtorClient\" \"https://example.com/api\" -d '{ \"key\": \"value\" }'",
             result
@@ -122,7 +123,7 @@ class GenerateCurlTests {
     }
 
     @Test
-    fun `generateCurl with empty body`() = runBlocking {
+    fun `generateCurl with empty body`() = runTest {
         val request = HttpRequestBuilder().apply {
             url("https://example.com/api")
             method = HttpMethod.Post
@@ -131,12 +132,12 @@ class GenerateCurlTests {
 
         val result = generateCurl(request, excludedHeaders = emptySet())
 
-        // No body content is added to the curl command
+        // Nobody content is added to the curl command
         assertEquals("curl -X POST \"https://example.com/api\"", result)
     }
 
     @Test
-    fun `generateCurl with multiple values for the same header`() = runBlocking {
+    fun `generateCurl with multiple values for the same header`() = runTest {
         val request = HttpRequestBuilder().apply {
             url("https://example.com/api")
             method = HttpMethod.Get
@@ -322,6 +323,4 @@ class OnRequestBodyTests {
         }
         assertEquals("Unknown Body Type", capturedBody)
     }
-
-
 }

@@ -2,6 +2,7 @@ package io.github.kabirnayeem99.ktor2curl
 
 import io.ktor.client.plugins.api.createClientPlugin
 
+@Suppress("unused")
 val KtorToCurl = createClientPlugin("KtorToCurlPlugin", ::KtorToCurlConfig) {
     val converter = pluginConfig.converter
     val excludedHeaders = pluginConfig.excludedHeaders

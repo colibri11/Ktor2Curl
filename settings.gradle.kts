@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 pluginManagement {
     repositories {
@@ -15,4 +17,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Ktor2Curl"
-include(":shared")
+include(":k2curl")
